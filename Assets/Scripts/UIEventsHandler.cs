@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class UIEventsHandler : MonoBehaviour
 {
+    public GameObject building;
+
+    private BuildingBehavior buildingBehavior;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -12,6 +16,8 @@ public class UIEventsHandler : MonoBehaviour
         foreach (Button button in buttons) {
             button.onClick.AddListener(HandleButton1Click);
         }
+
+        this.buildingBehavior = building.GetComponent<BuildingBehavior>();
     }
 
     // Update is called once per frame
@@ -22,6 +28,6 @@ public class UIEventsHandler : MonoBehaviour
 
     public void HandleButton1Click()
     {
-        Debug.Log("button on click");
+        this.buildingBehavior.SpawnUnit();
     }
 }

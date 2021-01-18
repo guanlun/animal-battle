@@ -78,13 +78,18 @@ public class InteractionController : MonoBehaviour
             this.isDragging = true;
             this.dragStartScreenPositionX = Input.mousePosition.x;
             this.dragStartScreenPositionY = Input.mousePosition.y;
-            this.dragSelectionBox.gameObject.SetActive(true);
+            
         }
 
         if (this.isDragging)
         {   
             float selectionBoxWidth = Input.mousePosition.x - this.dragStartScreenPositionX;
             float selectionBoxHeight = Input.mousePosition.y - this.dragStartScreenPositionY;
+
+            if (selectionBoxWidth != 0 && selectionBoxHeight != 0 && !this.dragSelectionBox.gameObject.activeSelf)
+            {
+                this.dragSelectionBox.gameObject.SetActive(true);
+            }
 
             this.dragSelectionBox.sizeDelta = new Vector2(Mathf.Abs(selectionBoxWidth), Mathf.Abs(selectionBoxHeight));
             this.dragSelectionBox.anchoredPosition = new Vector2(this.dragStartScreenPositionX + selectionBoxWidth / 2 - Screen.width / 2, this.dragStartScreenPositionY + selectionBoxHeight / 2 - Screen.height / 2);
@@ -96,28 +101,31 @@ public class InteractionController : MonoBehaviour
         {
             this.isDragging = false;
             this.dragSelectionBox.gameObject.SetActive(false);
-            
-            this.dragSelectionMeshFilter.mesh.vertices = new Vector3[5]
-            {
-                Camera.main.transform.position,
-                this.ComputeScreenPointAtFarPlane(this.dragStartScreenPositionX, this.dragStartScreenPositionY),
-                this.ComputeScreenPointAtFarPlane(Input.mousePosition.x, this.dragStartScreenPositionY),
-                this.ComputeScreenPointAtFarPlane(this.dragStartScreenPositionX, Input.mousePosition.y),
-                this.ComputeScreenPointAtFarPlane(Input.mousePosition.x, Input.mousePosition.y)
-            };
-            this.dragSelectionMeshFilter.mesh.RecalculateBounds();
 
-            MeshCollider existingCollider = this.dragSelection.GetComponent<MeshCollider>();
-            if (existingCollider)
+            if (Input.mousePosition.x != this.dragStartScreenPositionX && Input.mousePosition.y != this.dragStartScreenPositionY)
             {
-                Destroy(existingCollider);
+                this.dragSelectionMeshFilter.mesh.vertices = new Vector3[5]
+                {
+                    Camera.main.transform.position,
+                    this.ComputeScreenPointAtFarPlane(this.dragStartScreenPositionX, this.dragStartScreenPositionY),
+                    this.ComputeScreenPointAtFarPlane(Input.mousePosition.x, this.dragStartScreenPositionY),
+                    this.ComputeScreenPointAtFarPlane(this.dragStartScreenPositionX, Input.mousePosition.y),
+                    this.ComputeScreenPointAtFarPlane(Input.mousePosition.x, Input.mousePosition.y)
+                };
+                this.dragSelectionMeshFilter.mesh.RecalculateBounds();
+
+                MeshCollider existingCollider = this.dragSelection.GetComponent<MeshCollider>();
+                if (existingCollider)
+                {
+                    Destroy(existingCollider);
+                }
+
+                MeshCollider dragSelectionCollider = this.dragSelection.AddComponent<MeshCollider>();
+                dragSelectionCollider.convex = true;
+                dragSelectionCollider.isTrigger = true;
+
+                this.ClearSelectedUnits();
             }
-
-            MeshCollider dragSelectionCollider = this.dragSelection.AddComponent<MeshCollider>();
-            dragSelectionCollider.convex = true;
-            dragSelectionCollider.isTrigger = true;
-
-            this.ClearSelectedUnits();
         }
 
         bool rightMouseButtonUp = Input.GetMouseButtonUp(1);
