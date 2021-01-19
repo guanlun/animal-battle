@@ -16,11 +16,7 @@ public class DragSelectionCollisionHandler : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Friendly"))
         {
-            CatBehavior enteredCatBehavior = other.gameObject.GetComponent<CatBehavior>();
-            if (enteredCatBehavior)
-            {
-                interactionController.SelectUnit(enteredCatBehavior);
-            }
+            interactionController.SelectUnit(other.gameObject);
         }
     }
 }

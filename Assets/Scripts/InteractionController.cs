@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class InteractionController : MonoBehaviour
 {
-    public static Vector3 DIRECTION_UP = new Vector3(-1, 0, 1);
-    public static Vector3 DIRECTION_LEFT = new Vector3(-1, 0, -1);
-    public static Vector3 DIRECTION_DOWN = new Vector3(1, 0, -1);
-    public static Vector3 DIRECTION_RIGHT = new Vector3(1, 0, 1);
+    public static Vector3 DIRECTION_UP = new Vector3(-1, 0, 1).normalized;
+    public static Vector3 DIRECTION_LEFT = new Vector3(-1, 0, -1).normalized;
+    public static Vector3 DIRECTION_DOWN = new Vector3(1, 0, -1).normalized;
+    public static Vector3 DIRECTION_RIGHT = new Vector3(1, 0, 1).normalized;
     public static float CAMERA_MOVEMENT_SPEED = 0.1f;
 
     // properties for drag selection
@@ -19,7 +20,7 @@ public class InteractionController : MonoBehaviour
     private float dragStartScreenPositionX;
     private float dragStartScreenPositionY;
 
-    private List<CatBehavior> selectedCatBehaviors = new List<CatBehavior>();
+    private List<GameObject> selectedUnits = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -155,16 +156,13 @@ public class InteractionController : MonoBehaviour
                 {
                     if (hitObject.isStatic)
                     {
-                        foreach (CatBehavior selectedCatBehavior in this.selectedCatBehaviors)
-                        {
-                            selectedCatBehavior.MoveTo(hit.point);
-                        }
+                        this.MoveUnitsToDestination(hit.point);
                     }
                     else if (hitObject.CompareTag("Enemy"))
                     {
-                        foreach (CatBehavior selectedCatBehavior in this.selectedCatBehaviors)
+                        foreach (GameObject selectedUnit in this.selectedUnits)
                         {
-                            selectedCatBehavior.SetAttackTarget(hitObject);
+                            selectedUnit.GetComponent<CatBehavior>().SetAttackTarget(hitObject);
                         }
                     }
                 }
@@ -172,25 +170,137 @@ public class InteractionController : MonoBehaviour
         }
     }
 
-    public void SelectUnit(CatBehavior catBehavior)
+    public void SelectUnit(GameObject unit)
     {
-        catBehavior.SetSelectedState(true);
-        this.selectedCatBehaviors.Add(catBehavior);
+        unit.GetComponent<CatBehavior>().SetSelectedState(true);
+        this.selectedUnits.Add(unit);
     }
 
     private void ClearSelectedUnits()
     {
-        foreach (CatBehavior selectedCatBehavior in this.selectedCatBehaviors)
+        foreach (GameObject selectedUnit in this.selectedUnits)
         {
-            selectedCatBehavior.SetSelectedState(false);
+            selectedUnit.GetComponent<CatBehavior>().SetSelectedState(false);
         }
 
-        this.selectedCatBehaviors.Clear();
+        this.selectedUnits.Clear();
     }
 
     private Vector3 ComputeScreenPointAtFarPlane(float screenX, float screenY)
     {
         Vector3 cameraPosition = Camera.main.transform.position;
         return (Camera.main.ScreenToWorldPoint(new Vector3(screenX, screenY, Camera.main.nearClipPlane)) - cameraPosition) * 100 + cameraPosition;
+    }
+
+    private void MoveUnitsToDestination(Vector3 desiredDestination)
+    {
+        float coefficient = 1f;
+
+        Debug.Log(this.selectedUnits.Count);
+
+        // TODO: sort selected units by distance to desination and move the closest ones near the center
+        if (this.selectedUnits.Count == 1)
+        {
+            this.selectedUnits[0].GetComponent<CatBehavior>().MoveTo(desiredDestination);
+        }
+        else if (this.selectedUnits.Count == 2)
+        {
+            this.selectedUnits[0].GetComponent<CatBehavior>().MoveTo(desiredDestination + DIRECTION_RIGHT * coefficient);
+            this.selectedUnits[1].GetComponent<CatBehavior>().MoveTo(desiredDestination + DIRECTION_LEFT * coefficient);
+        }
+        else if (this.selectedUnits.Count == 3)
+        {
+            this.selectedUnits[0].GetComponent<CatBehavior>().MoveTo(desiredDestination + DIRECTION_UP * coefficient);
+            this.selectedUnits[1].GetComponent<CatBehavior>().MoveTo(desiredDestination + (DIRECTION_LEFT * 0.866f + DIRECTION_DOWN * 0.5f).normalized * coefficient);
+            this.selectedUnits[2].GetComponent<CatBehavior>().MoveTo(desiredDestination + (DIRECTION_RIGHT * 0.866f + DIRECTION_DOWN * 0.5f).normalized * coefficient);
+        }
+        else if (this.selectedUnits.Count >= 4)
+        {
+            Vector3 topLeftBasePosition = desiredDestination + (DIRECTION_UP + DIRECTION_LEFT).normalized * coefficient;
+            Vector3 topRightBasePosition = desiredDestination + (DIRECTION_UP + DIRECTION_RIGHT).normalized * coefficient;
+            Vector3 bottomLeftBasePosition = desiredDestination + (DIRECTION_DOWN + DIRECTION_LEFT).normalized * coefficient;
+            Vector3 bottomRightBasePosition = desiredDestination + (DIRECTION_DOWN + DIRECTION_RIGHT).normalized * coefficient;
+
+            this.selectedUnits[0].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition);
+            this.selectedUnits[1].GetComponent<CatBehavior>().MoveTo(topRightBasePosition);
+            this.selectedUnits[2].GetComponent<CatBehavior>().MoveTo(bottomLeftBasePosition);
+            this.selectedUnits[3].GetComponent<CatBehavior>().MoveTo(bottomRightBasePosition);
+
+            int currentLayerNum = 1;
+            int unitIndex = 3;
+
+            while (true)
+            {
+                for (int i = 0; i < currentLayerNum * 2; i++)
+                {
+                    if (++unitIndex == this.selectedUnits.Count)
+                    {
+                        return;
+                    }
+
+                    this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f * i);
+                }
+
+                for (int i = 0; i < currentLayerNum * 2; i++)
+                {
+                    if (++unitIndex == this.selectedUnits.Count)
+                    {
+                        return;
+                    }
+
+                    this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(topRightBasePosition + DIRECTION_RIGHT * coefficient * 1.41f + DIRECTION_DOWN * coefficient * 1.41f * i);
+                }
+
+                for (int i = 0; i < currentLayerNum * 2; i++)
+                {
+                    if (++unitIndex == this.selectedUnits.Count)
+                    {
+                        return;
+                    }
+
+                    this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition + DIRECTION_LEFT * coefficient * 1.41f + DIRECTION_DOWN * coefficient * 1.41f * i);
+                }
+
+                for (int i = 0; i < currentLayerNum * 2; i++)
+                {
+                    if (++unitIndex == this.selectedUnits.Count)
+                    {
+                        return;
+                    }
+
+                    this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(bottomLeftBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f * i);
+                }
+
+                if (++unitIndex == this.selectedUnits.Count)
+                {
+                    return;
+                }
+                topLeftBasePosition = topLeftBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_LEFT * coefficient * 1.41f;
+                this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition);
+
+                if (++unitIndex == this.selectedUnits.Count)
+                {
+                    return;
+                }
+                topRightBasePosition = topRightBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f;
+                this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(topRightBasePosition);
+
+                if (++unitIndex == this.selectedUnits.Count)
+                {
+                    return;
+                }
+                bottomLeftBasePosition = bottomLeftBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_LEFT * coefficient * 1.41f;
+                this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(bottomLeftBasePosition);
+
+                if (++unitIndex == this.selectedUnits.Count)
+                {
+                    return;
+                }
+                bottomRightBasePosition = bottomRightBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f;
+                this.selectedUnits[unitIndex].GetComponent<CatBehavior>().MoveTo(bottomRightBasePosition);
+
+                currentLayerNum++;
+            }
+        }
     }
 }
