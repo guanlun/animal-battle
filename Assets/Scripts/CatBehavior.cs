@@ -169,9 +169,9 @@ public class CatBehavior : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnDetectionRangeTriggerEnter(Collider other)
     {
-        CatBehavior otherCatBehavior = other.gameObject.GetComponent<CatBehavior>();
+        CatBehavior otherCatBehavior = other.gameObject.GetComponentInParent<CatBehavior>();
 
         if (otherCatBehavior && otherCatBehavior.isEnemyUnit != this.isEnemyUnit)
         {
@@ -181,7 +181,7 @@ public class CatBehavior : MonoBehaviour
         this.ChooseAttackTarget();
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnDetectionRangeTriggerExit(Collider other)
     {
         CatBehavior otherCatBehavior = other.gameObject.GetComponent<CatBehavior>();
 
