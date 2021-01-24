@@ -19,6 +19,9 @@ public class CatBehavior : MonoBehaviour
     protected float detectionDistance = 10;
     protected float attackDistance = 2;
 
+    protected List<UnitAction> actions = new List<UnitAction>();
+    protected UnitAction currentAction;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,6 +33,8 @@ public class CatBehavior : MonoBehaviour
         this.selectedStateIndicator.SetActive(false);
 
         this.isEnemyUnit = this.CompareTag("Enemy");
+
+        this.actions.Add(new GatherResource(this));
     }
 
     // Update is called once per frame
@@ -39,11 +44,6 @@ public class CatBehavior : MonoBehaviour
         {
             return;
         }
-        //if (isMoving)
-        //{
-        //    this.catModelTransform.rotation = Quaternion.LookRotation(facingDirection);
-        //    this.characterController.Move(facingDirection.normalized * (isRunning ? RUN_SPEED : WALK_SPEED));
-        //}
 
         if (this.attackTargetGameObject)
         {
@@ -58,6 +58,10 @@ public class CatBehavior : MonoBehaviour
             {
                 float distanceToTarget = Vector3.Distance(this.transform.position, this.attackTargetGameObject.transform.position);
 
+                if (currentAction.IsTargetInRange())
+                {
+                    
+                }
                 if (distanceToTarget < this.attackDistance)
                 {
                     this.navMeshAgent.isStopped = true;
@@ -104,6 +108,17 @@ public class CatBehavior : MonoBehaviour
         this.navMeshAgent.isStopped = false;
 
         this.animator.SetBool("isWalking", true);
+    }
+
+    public void SetGatherTarget(GameObject target)
+    {
+        foreach (UnitAction action in this.actions)
+        {
+            if (action.CanActOn(target))
+            {
+                action.ActOn(target);
+            }
+        }
     }
 
     public void HandleAttackHitAnimationEvent()

@@ -132,7 +132,7 @@ public class InteractionController : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
             {
                 GameObject hitObject = hit.collider.gameObject;
-                
+
                 if (leftMouseButtonUp)
                 {
                     if (hitObject.CompareTag("Friendly"))
@@ -143,6 +143,10 @@ public class InteractionController : MonoBehaviour
                         CatBehavior catBehavior = hitObject.GetComponent<CatBehavior>();
                         catBehavior.SetSelectedState(true);
                         this.selectedUnits.Add(hitObject);
+                    }
+                    else if (hitObject.CompareTag("Resource"))
+                    {
+                        Debug.Log("res");
                     }
                 }
                 else if (rightMouseButtonUp)
@@ -156,6 +160,13 @@ public class InteractionController : MonoBehaviour
                         foreach (GameObject selectedUnit in this.selectedUnits)
                         {
                             selectedUnit.GetComponent<CatBehavior>().SetAttackTarget(hitObject);
+                        }
+                    }
+                    else if (hitObject.CompareTag("Resource"))
+                    {
+                        foreach (GameObject selectedUnit in this.selectedUnits)
+                        {
+                            selectedUnit.GetComponent<CatBehavior>().SetGatherTarget(hitObject);
                         }
                     }
                 }
