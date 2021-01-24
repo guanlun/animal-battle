@@ -60,7 +60,7 @@ public class CatBehavior : MonoBehaviour
 
                 if (currentAction.IsTargetInRange())
                 {
-                    
+                    // stop and take action
                 }
                 if (distanceToTarget < this.attackDistance)
                 {
