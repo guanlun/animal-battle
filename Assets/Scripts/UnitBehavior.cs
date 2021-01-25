@@ -110,6 +110,8 @@ public class UnitBehavior : MonoBehaviour
             if (action.CanActOn(target))
             {
                 action.ActOn(target);
+
+                this.currentAction = action;
             }
         }
     }
