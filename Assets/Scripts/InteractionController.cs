@@ -159,7 +159,12 @@ public class InteractionController : MonoBehaviour
                     {
                         foreach (GameObject selectedUnit in this.selectedUnits)
                         {
-                            
+                            UnitBehavior unitBehavior = selectedUnit.GetComponent<UnitBehavior>();
+
+                            if (unitBehavior != null)
+                            {
+                                unitBehavior.SetTarget(hitObject);
+                            }
                         }
                     }
                     //else if (hitObject.CompareTag("Enemy"))

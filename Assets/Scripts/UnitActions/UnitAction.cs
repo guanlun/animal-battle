@@ -13,9 +13,9 @@ public abstract class UnitAction
         this.unitBehavior = unitBehavior;
     }
 
-    public abstract bool CanActOn(GameObject gameObject);
+    public abstract bool CanActOn(GameObject targetObject);
 
-    public abstract void ActOn(GameObject gameObject);
+    public abstract void ActOn(GameObject targetObject);
 
     public bool IsTargetInRange()
     {

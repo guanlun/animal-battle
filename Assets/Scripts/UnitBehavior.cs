@@ -35,6 +35,7 @@ public class UnitBehavior : MonoBehaviour
         this.isEnemyUnit = this.CompareTag("Enemy");
 
         this.actions.Add(new GatherResource(this));
+        this.actions.Add(new MeleeAttack(this));
     }
 
     // Update is called once per frame
@@ -102,15 +103,7 @@ public class UnitBehavior : MonoBehaviour
         this.animator.SetBool("isWalking", true);
     }
 
-    public void SetAttackTarget(GameObject target)
-    {
-        this.attackTargetGameObject = target;
-        this.navMeshAgent.isStopped = false;
-
-        this.animator.SetBool("isWalking", true);
-    }
-
-    public void SetGatherTarget(GameObject target)
+    public void SetTarget(GameObject target)
     {
         foreach (UnitAction action in this.actions)
         {
@@ -119,6 +112,14 @@ public class UnitBehavior : MonoBehaviour
                 action.ActOn(target);
             }
         }
+    }
+
+    public void SetAttackTarget(GameObject target)
+    {
+        this.attackTargetGameObject = target;
+        this.navMeshAgent.isStopped = false;
+
+        this.animator.SetBool("isWalking", true);
     }
 
     public void HandleAttackHitAnimationEvent()
