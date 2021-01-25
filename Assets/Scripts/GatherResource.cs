@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GatherResource : UnitAction
 {
-    public GatherResource(CatBehavior catBehavior) : base(catBehavior)
+    public GatherResource(UnitBehavior unitBehavior) : base(unitBehavior)
     {
         this.actionRange = 1;
     }
@@ -15,6 +15,6 @@ public class GatherResource : UnitAction
 
     public override void ActOn(GameObject gameObject)
     {
-        this.catBehavior.MoveTo(gameObject.transform.position);
+        this.unitBehavior.MoveTo(gameObject.transform.position);
     }
 }

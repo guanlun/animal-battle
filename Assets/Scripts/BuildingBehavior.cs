@@ -21,7 +21,7 @@ public class BuildingBehavior : MonoBehaviour
     public void SpawnUnit()
     {
         GameObject spawnedUnit = Instantiate(catPrefab, this.transform.position, Quaternion.identity);
-        CatBehavior spawnedUnitBehavior = spawnedUnit.GetComponent<CatBehavior>();
+        UnitBehavior spawnedUnitBehavior = spawnedUnit.GetComponent<UnitBehavior>();
 
         spawnedUnitBehavior.MoveTo(this.transform.position + new Vector3(2, 0, 2));
     }

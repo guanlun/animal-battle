@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class CatAnimationHandler : MonoBehaviour
 {
-    protected CatBehavior catBehavior;
+    protected UnitBehavior unitBehavior;
 
     void Start()
     {
-        this.catBehavior = this.gameObject.GetComponentInParent<CatBehavior>();
+        this.unitBehavior = this.gameObject.GetComponentInParent<UnitBehavior>();
     }
 
     void AttackHit()
     {
-        this.catBehavior.HandleAttackHitAnimationEvent();
+        this.unitBehavior.HandleAttackHitAnimationEvent();
     }
 
     void AttackFinish()
     {
-        this.catBehavior.HandleAttackFinishAnimationEvent();
+        this.unitBehavior.HandleAttackFinishAnimationEvent();
     }
 }

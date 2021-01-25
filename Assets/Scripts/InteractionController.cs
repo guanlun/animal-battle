@@ -140,8 +140,8 @@ public class InteractionController : MonoBehaviour
                         // clear current selection first
                         this.ClearSelectedUnits();
 
-                        CatBehavior catBehavior = hitObject.GetComponent<CatBehavior>();
-                        catBehavior.SetSelectedState(true);
+                        UnitBehavior unitBehavior = hitObject.GetComponent<UnitBehavior>();
+                        unitBehavior.SetSelectedState(true);
                         this.selectedUnits.Add(hitObject);
                     }
                     else if (hitObject.CompareTag("Resource"))
@@ -155,20 +155,27 @@ public class InteractionController : MonoBehaviour
                     {
                         this.MoveUnitsToDestination(hit.point);
                     }
-                    else if (hitObject.CompareTag("Enemy"))
+                    else
                     {
                         foreach (GameObject selectedUnit in this.selectedUnits)
                         {
-                            selectedUnit.GetComponent<CatBehavior>().SetAttackTarget(hitObject);
+                            
                         }
                     }
-                    else if (hitObject.CompareTag("Resource"))
-                    {
-                        foreach (GameObject selectedUnit in this.selectedUnits)
-                        {
-                            selectedUnit.GetComponent<CatBehavior>().SetGatherTarget(hitObject);
-                        }
-                    }
+                    //else if (hitObject.CompareTag("Enemy"))
+                    //{
+                    //    foreach (GameObject selectedUnit in this.selectedUnits)
+                    //    {
+                    //        selectedUnit.GetComponent<UnitBehavior>().SetAttackTarget(hitObject);
+                    //    }
+                    //}
+                    //else if (hitObject.CompareTag("Resource"))
+                    //{
+                    //    foreach (GameObject selectedUnit in this.selectedUnits)
+                    //    {
+                    //        selectedUnit.GetComponent<UnitBehavior>().SetGatherTarget(hitObject);
+                    //    }
+                    //}
                 }
             }
         }
@@ -176,7 +183,7 @@ public class InteractionController : MonoBehaviour
 
     public void SelectUnit(GameObject unit)
     {
-        unit.GetComponent<CatBehavior>().SetSelectedState(true);
+        unit.GetComponent<UnitBehavior>().SetSelectedState(true);
         this.selectedUnits.Add(unit);
     }
 
@@ -184,7 +191,7 @@ public class InteractionController : MonoBehaviour
     {
         foreach (GameObject selectedUnit in this.selectedUnits)
         {
-            selectedUnit.GetComponent<CatBehavior>().SetSelectedState(false);
+            selectedUnit.GetComponent<UnitBehavior>().SetSelectedState(false);
         }
 
         this.selectedUnits.Clear();
@@ -205,18 +212,18 @@ public class InteractionController : MonoBehaviour
         // TODO: sort selected units by distance to desination and move the closest ones near the center
         if (selectedUnitList.Count == 1)
         {
-            selectedUnitList[0].GetComponent<CatBehavior>().MoveTo(desiredDestination);
+            selectedUnitList[0].GetComponent<UnitBehavior>().MoveTo(desiredDestination);
         }
         else if (selectedUnitList.Count == 2)
         {
-            selectedUnitList[0].GetComponent<CatBehavior>().MoveTo(desiredDestination + DIRECTION_RIGHT * coefficient);
-            selectedUnitList[1].GetComponent<CatBehavior>().MoveTo(desiredDestination + DIRECTION_LEFT * coefficient);
+            selectedUnitList[0].GetComponent<UnitBehavior>().MoveTo(desiredDestination + DIRECTION_RIGHT * coefficient);
+            selectedUnitList[1].GetComponent<UnitBehavior>().MoveTo(desiredDestination + DIRECTION_LEFT * coefficient);
         }
         else if (selectedUnitList.Count == 3)
         {
-            selectedUnitList[0].GetComponent<CatBehavior>().MoveTo(desiredDestination + DIRECTION_UP * coefficient);
-            selectedUnitList[1].GetComponent<CatBehavior>().MoveTo(desiredDestination + (DIRECTION_LEFT * 0.866f + DIRECTION_DOWN * 0.5f).normalized * coefficient);
-            selectedUnitList[2].GetComponent<CatBehavior>().MoveTo(desiredDestination + (DIRECTION_RIGHT * 0.866f + DIRECTION_DOWN * 0.5f).normalized * coefficient);
+            selectedUnitList[0].GetComponent<UnitBehavior>().MoveTo(desiredDestination + DIRECTION_UP * coefficient);
+            selectedUnitList[1].GetComponent<UnitBehavior>().MoveTo(desiredDestination + (DIRECTION_LEFT * 0.866f + DIRECTION_DOWN * 0.5f).normalized * coefficient);
+            selectedUnitList[2].GetComponent<UnitBehavior>().MoveTo(desiredDestination + (DIRECTION_RIGHT * 0.866f + DIRECTION_DOWN * 0.5f).normalized * coefficient);
         }
         else if (selectedUnitList.Count >= 4)
         {
@@ -225,10 +232,10 @@ public class InteractionController : MonoBehaviour
             Vector3 bottomLeftBasePosition = desiredDestination + (DIRECTION_DOWN + DIRECTION_LEFT).normalized * coefficient;
             Vector3 bottomRightBasePosition = desiredDestination + (DIRECTION_DOWN + DIRECTION_RIGHT).normalized * coefficient;
 
-            selectedUnitList[0].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition);
-            selectedUnitList[1].GetComponent<CatBehavior>().MoveTo(topRightBasePosition);
-            selectedUnitList[2].GetComponent<CatBehavior>().MoveTo(bottomLeftBasePosition);
-            selectedUnitList[3].GetComponent<CatBehavior>().MoveTo(bottomRightBasePosition);
+            selectedUnitList[0].GetComponent<UnitBehavior>().MoveTo(topLeftBasePosition);
+            selectedUnitList[1].GetComponent<UnitBehavior>().MoveTo(topRightBasePosition);
+            selectedUnitList[2].GetComponent<UnitBehavior>().MoveTo(bottomLeftBasePosition);
+            selectedUnitList[3].GetComponent<UnitBehavior>().MoveTo(bottomRightBasePosition);
 
             int currentLayerNum = 1;
             int unitIndex = 3;
@@ -242,7 +249,7 @@ public class InteractionController : MonoBehaviour
                         return;
                     }
 
-                    selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f * i);
+                    selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(topLeftBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f * i);
                 }
 
                 for (int i = 0; i < currentLayerNum * 2; i++)
@@ -252,7 +259,7 @@ public class InteractionController : MonoBehaviour
                         return;
                     }
 
-                    selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(topRightBasePosition + DIRECTION_RIGHT * coefficient * 1.41f + DIRECTION_DOWN * coefficient * 1.41f * i);
+                    selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(topRightBasePosition + DIRECTION_RIGHT * coefficient * 1.41f + DIRECTION_DOWN * coefficient * 1.41f * i);
                 }
 
                 for (int i = 0; i < currentLayerNum * 2; i++)
@@ -262,7 +269,7 @@ public class InteractionController : MonoBehaviour
                         return;
                     }
 
-                    selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition + DIRECTION_LEFT * coefficient * 1.41f + DIRECTION_DOWN * coefficient * 1.41f * i);
+                    selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(topLeftBasePosition + DIRECTION_LEFT * coefficient * 1.41f + DIRECTION_DOWN * coefficient * 1.41f * i);
                 }
 
                 for (int i = 0; i < currentLayerNum * 2; i++)
@@ -272,7 +279,7 @@ public class InteractionController : MonoBehaviour
                         return;
                     }
 
-                    selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(bottomLeftBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f * i);
+                    selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(bottomLeftBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f * i);
                 }
 
                 if (++unitIndex == selectedUnitList.Count)
@@ -280,28 +287,28 @@ public class InteractionController : MonoBehaviour
                     return;
                 }
                 topLeftBasePosition = topLeftBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_LEFT * coefficient * 1.41f;
-                selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(topLeftBasePosition);
+                selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(topLeftBasePosition);
 
                 if (++unitIndex == selectedUnitList.Count)
                 {
                     return;
                 }
                 topRightBasePosition = topRightBasePosition + DIRECTION_UP * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f;
-                selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(topRightBasePosition);
+                selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(topRightBasePosition);
 
                 if (++unitIndex == selectedUnitList.Count)
                 {
                     return;
                 }
                 bottomLeftBasePosition = bottomLeftBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_LEFT * coefficient * 1.41f;
-                selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(bottomLeftBasePosition);
+                selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(bottomLeftBasePosition);
 
                 if (++unitIndex == selectedUnitList.Count)
                 {
                     return;
                 }
                 bottomRightBasePosition = bottomRightBasePosition + DIRECTION_DOWN * coefficient * 1.41f + DIRECTION_RIGHT * coefficient * 1.41f;
-                selectedUnitList[unitIndex].GetComponent<CatBehavior>().MoveTo(bottomRightBasePosition);
+                selectedUnitList[unitIndex].GetComponent<UnitBehavior>().MoveTo(bottomRightBasePosition);
 
                 currentLayerNum++;
             }

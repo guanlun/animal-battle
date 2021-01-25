@@ -6,6 +6,6 @@ public class DetectionRange : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        this.gameObject.GetComponentInParent<CatBehavior>().OnDetectionRangeTriggerEnter(other);
+        this.gameObject.GetComponentInParent<UnitBehavior>().OnDetectionRangeTriggerEnter(other);
     }
 }

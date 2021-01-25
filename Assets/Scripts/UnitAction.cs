@@ -3,14 +3,14 @@ using UnityEngine;
 
 public abstract class UnitAction
 {
-    protected CatBehavior catBehavior;
+    protected UnitBehavior unitBehavior;
     protected GameObject target;
 
     public int actionRange;
 
-    public UnitAction(CatBehavior catBehavior)
+    public UnitAction(UnitBehavior unitBehavior)
     {
-        this.catBehavior = catBehavior;
+        this.unitBehavior = unitBehavior;
     }
 
     public abstract bool CanActOn(GameObject gameObject);
@@ -19,6 +19,6 @@ public abstract class UnitAction
 
     public bool IsTargetInRange()
     {
-        return Vector3.Distance(this.catBehavior.gameObject.transform.position, this.target.transform.position) <= this.actionRange;
+        return Vector3.Distance(this.unitBehavior.gameObject.transform.position, this.target.transform.position) <= this.actionRange;
     }
 }

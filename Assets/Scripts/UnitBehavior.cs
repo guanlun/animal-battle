@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class CatBehavior : MonoBehaviour
+public class UnitBehavior : MonoBehaviour
 {
     protected Transform catModelTransform;
     protected NavMeshAgent navMeshAgent;
     protected Animator animator;
     protected GameObject selectedStateIndicator;
     protected GameObject attackTargetGameObject;
-    protected HashSet<CatBehavior> enemiesSpotted = new HashSet<CatBehavior>();
-    
+    protected HashSet<UnitBehavior> enemiesSpotted = new HashSet<UnitBehavior>();
+
     protected int health = 100;
     protected bool isDead = false;
     protected bool isEnemyUnit;
@@ -47,7 +47,7 @@ public class CatBehavior : MonoBehaviour
 
         if (this.attackTargetGameObject)
         {
-            CatBehavior targetBehavior = this.attackTargetGameObject.GetComponent<CatBehavior>();
+            UnitBehavior targetBehavior = this.attackTargetGameObject.GetComponent<UnitBehavior>();
 
             if (targetBehavior.isDead)
             {
@@ -91,7 +91,7 @@ public class CatBehavior : MonoBehaviour
     public void SetSelectedState(bool isSelected)
     {
         this.selectedStateIndicator.SetActive(isSelected);
-    }       
+    }
 
     public void MoveTo(Vector3 destination)
     {
@@ -129,7 +129,7 @@ public class CatBehavior : MonoBehaviour
             return;
         }
 
-        CatBehavior targetBehavior = this.attackTargetGameObject.GetComponent<CatBehavior>();
+        UnitBehavior targetBehavior = this.attackTargetGameObject.GetComponent<UnitBehavior>();
 
         if (targetBehavior)
         {
@@ -140,8 +140,8 @@ public class CatBehavior : MonoBehaviour
     private void ChooseAttackTarget()
     {
         float minDistance = float.MaxValue;
-        CatBehavior closestEnemy = null;
-        foreach (CatBehavior enemy in this.enemiesSpotted)
+        UnitBehavior closestEnemy = null;
+        foreach (UnitBehavior enemy in this.enemiesSpotted)
         {
             if (enemy.isDead)
             {
@@ -165,10 +165,10 @@ public class CatBehavior : MonoBehaviour
 
     public void HandleAttackFinishAnimationEvent()
     {
-        if (!this.attackTargetGameObject || this.attackTargetGameObject.GetComponent<CatBehavior>().isDead)
+        if (!this.attackTargetGameObject || this.attackTargetGameObject.GetComponent<UnitBehavior>().isDead)
         {
             animator.SetBool("isAttacking", false);
-            
+
             this.ChooseAttackTarget();
         }
     }
@@ -186,11 +186,11 @@ public class CatBehavior : MonoBehaviour
 
     public void OnDetectionRangeTriggerEnter(Collider other)
     {
-        CatBehavior otherCatBehavior = other.gameObject.GetComponentInParent<CatBehavior>();
+        UnitBehavior otherUnitBehavior = other.gameObject.GetComponentInParent<UnitBehavior>();
 
-        if (otherCatBehavior && otherCatBehavior.isEnemyUnit != this.isEnemyUnit)
+        if (otherUnitBehavior && otherUnitBehavior.isEnemyUnit != this.isEnemyUnit)
         {
-            this.enemiesSpotted.Add(otherCatBehavior);
+            this.enemiesSpotted.Add(otherUnitBehavior);
         }
 
         this.ChooseAttackTarget();
@@ -198,11 +198,11 @@ public class CatBehavior : MonoBehaviour
 
     public void OnDetectionRangeTriggerExit(Collider other)
     {
-        CatBehavior otherCatBehavior = other.gameObject.GetComponent<CatBehavior>();
+        UnitBehavior otherUnitBehavior = other.gameObject.GetComponent<UnitBehavior>();
 
-        if (this.enemiesSpotted.Contains(otherCatBehavior))
+        if (this.enemiesSpotted.Contains(otherUnitBehavior))
         {
-            this.enemiesSpotted.Remove(otherCatBehavior);
+            this.enemiesSpotted.Remove(otherUnitBehavior);
         }
     }
 }
