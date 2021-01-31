@@ -15,7 +15,11 @@ public abstract class UnitAction
 
     public abstract bool CanActOn(GameObject targetObject);
 
-    public abstract void ActOn(GameObject targetObject);
+    public abstract void SetTarget(GameObject gameObject);
+
+    public abstract void Act();
+
+    public virtual void HandleAnimationEvent(String animationName) { }
 
     public bool IsTargetInRange()
     {

@@ -13,11 +13,12 @@ public class CatAnimationHandler : MonoBehaviour
 
     void AttackHit()
     {
-        this.unitBehavior.HandleAttackHitAnimationEvent();
+        //this.unitBehavior.HandleAttackHitAnimationEvent();
+        this.unitBehavior.HandleAnimationEvent("AttackHit");
     }
 
     void AttackFinish()
     {
-        this.unitBehavior.HandleAttackFinishAnimationEvent();
+        //this.unitBehavior.HandleAttackFinishAnimationEvent();
     }
 }

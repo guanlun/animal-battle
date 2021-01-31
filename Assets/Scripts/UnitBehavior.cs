@@ -7,14 +7,14 @@ public class UnitBehavior : MonoBehaviour
 {
     protected Transform catModelTransform;
     protected NavMeshAgent navMeshAgent;
-    protected Animator animator;
+    public Animator animator;
     protected GameObject selectedStateIndicator;
     protected GameObject attackTargetGameObject;
     protected HashSet<UnitBehavior> enemiesSpotted = new HashSet<UnitBehavior>();
 
-    protected int health = 100;
-    protected bool isDead = false;
-    protected bool isEnemyUnit;
+    public int health = 100;
+    public bool isDead = false;
+    public bool isEnemyUnit;
 
     protected float detectionDistance = 10;
     protected float attackDistance = 2;
@@ -46,36 +46,38 @@ public class UnitBehavior : MonoBehaviour
             return;
         }
 
-        if (this.attackTargetGameObject)
+        if (this.currentAction != null && this.currentAction.IsTargetInRange())
         {
-            UnitBehavior targetBehavior = this.attackTargetGameObject.GetComponent<UnitBehavior>();
-
-            if (targetBehavior.isDead)
-            {
-                //this.attackTargetGameObject = null;
-                //this.animator.SetBool("isAttacking", false);
-            }
-            else
-            {
-                float distanceToTarget = Vector3.Distance(this.transform.position, this.attackTargetGameObject.transform.position);
-
-                if (currentAction.IsTargetInRange())
-                {
-                    // stop and take action
-                }
-                if (distanceToTarget < this.attackDistance)
-                {
-                    this.navMeshAgent.isStopped = true;
-                    this.animator.SetBool("isAttacking", true);
-                }
-                else
-                {
-                    this.navMeshAgent.isStopped = false;
-                    this.animator.SetBool("isAttacking", false);
-                    this.navMeshAgent.SetDestination(this.attackTargetGameObject.transform.position);
-                }
-            }
+            this.navMeshAgent.isStopped = true;
+            this.currentAction.Act();
         }
+
+        //if (this.attackTargetGameObject)
+        //{
+        //    UnitBehavior targetBehavior = this.attackTargetGameObject.GetComponent<UnitBehavior>();
+
+        //    if (targetBehavior.isDead)
+        //    {
+        //        //this.attackTargetGameObject = null;
+        //        //this.animator.SetBool("isAttacking", false);
+        //    }
+        //    else
+        //    {
+        //        float distanceToTarget = Vector3.Distance(this.transform.position, this.attackTargetGameObject.transform.position);
+
+        //        if (distanceToTarget < this.attackDistance)
+        //        {
+        //            this.navMeshAgent.isStopped = true;
+        //            this.animator.SetBool("isAttacking", true);
+        //        }
+        //        else
+        //        {
+        //            this.navMeshAgent.isStopped = false;
+        //            this.animator.SetBool("isAttacking", false);
+        //            this.navMeshAgent.SetDestination(this.attackTargetGameObject.transform.position);
+        //        }
+        //    }
+        //}
 
         if (this.animator.GetBool("isWalking") && !this.navMeshAgent.pathPending)
         {
@@ -109,7 +111,7 @@ public class UnitBehavior : MonoBehaviour
         {
             if (action.CanActOn(target))
             {
-                action.ActOn(target);
+                action.SetTarget(target);
 
                 this.currentAction = action;
             }
@@ -122,6 +124,14 @@ public class UnitBehavior : MonoBehaviour
         this.navMeshAgent.isStopped = false;
 
         this.animator.SetBool("isWalking", true);
+    }
+
+    public void HandleAnimationEvent(string animationName)
+    {
+        if (this.currentAction != null)
+        {
+            this.currentAction.HandleAnimationEvent(animationName);
+        }
     }
 
     public void HandleAttackHitAnimationEvent()

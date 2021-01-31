@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GatherResource : UnitAction
 {
     public GatherResource(UnitBehavior unitBehavior) : base(unitBehavior)
     {
-        this.actionRange = 1;
+        this.actionRange = 2;
     }
 
     public override bool CanActOn(GameObject gameObject)
@@ -13,8 +12,20 @@ public class GatherResource : UnitAction
         return gameObject.CompareTag("Resource");
     }
 
-    public override void ActOn(GameObject gameObject)
+    public override void SetTarget(GameObject gameObject)
     {
+        this.target = gameObject;
         this.unitBehavior.MoveTo(gameObject.transform.position);
+    }
+
+    public override void Act()
+    {
+        Debug.Log("gather");
+        this.unitBehavior.animator.SetBool("isWalking", false);
+        this.unitBehavior.animator.SetBool("isGathering", true);
+    }
+
+    public override void HandleAnimationEvent(string animationName)
+    {
     }
 }
