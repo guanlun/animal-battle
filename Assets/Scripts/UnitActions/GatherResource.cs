@@ -20,12 +20,16 @@ public class GatherResource : UnitAction
 
     public override void Act()
     {
-        Debug.Log("gather");
         this.unitBehavior.animator.SetBool("isWalking", false);
         this.unitBehavior.animator.SetBool("isGathering", true);
     }
 
     public override void HandleAnimationEvent(string animationName)
     {
+        if (animationName == "GatherFinish")
+        {
+            this.unitBehavior.animator.SetBool("isGathering", false);
+            this.unitBehavior.ResetAction();
+        }
     }
 }

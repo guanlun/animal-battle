@@ -22,6 +22,9 @@ public class UnitBehavior : MonoBehaviour
     protected List<UnitAction> actions = new List<UnitAction>();
     protected UnitAction currentAction;
 
+    public Material redCollarMaterial;
+    public Material blueCollarMaterial;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -33,6 +36,10 @@ public class UnitBehavior : MonoBehaviour
         this.selectedStateIndicator.SetActive(false);
 
         this.isEnemyUnit = this.CompareTag("Enemy");
+
+        this.catModelTransform.Find("Collar").GetComponent<Renderer>().material = this.isEnemyUnit
+            ? redCollarMaterial
+            : blueCollarMaterial;
 
         this.actions.Add(new GatherResource(this));
         this.actions.Add(new MeleeAttack(this));
@@ -89,6 +96,11 @@ public class UnitBehavior : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ResetAction()
+    {
+        this.currentAction = null;
     }
 
     public void SetSelectedState(bool isSelected)

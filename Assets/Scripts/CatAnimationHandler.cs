@@ -21,4 +21,9 @@ public class CatAnimationHandler : MonoBehaviour
     {
         //this.unitBehavior.HandleAttackFinishAnimationEvent();
     }
+
+    void GatherFinish()
+    {
+        this.unitBehavior.HandleAnimationEvent("GatherFinish");
+    }
 }
