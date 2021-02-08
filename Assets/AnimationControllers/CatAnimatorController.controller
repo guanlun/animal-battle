@@ -46,7 +46,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 4723146814002874508, guid: 1d331402a5657426e82e509e76412fec,
+  m_Motion: {fileID: 4723146814002874508, guid: 248d28fec9b8d4f0cb513047e3d53f99,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -74,7 +74,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 4770021547923198493, guid: 1d331402a5657426e82e509e76412fec,
+  m_Motion: {fileID: 4770021547923198493, guid: 248d28fec9b8d4f0cb513047e3d53f99,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -126,7 +126,7 @@ AnimatorStateMachine:
     m_Position: {x: 590, y: 130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6053173192321015137}
-    m_Position: {x: 310, y: -70, z: 0}
+    m_Position: {x: 310, y: -60, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -211,7 +211,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -8945691123924629249, guid: 1d331402a5657426e82e509e76412fec,
+  m_Motion: {fileID: -8945691123924629249, guid: 248d28fec9b8d4f0cb513047e3d53f99,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -232,19 +232,19 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: isAttacking
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: isGathering
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -432,7 +432,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 8349542763059015795, guid: 1d331402a5657426e82e509e76412fec,
+  m_Motion: {fileID: 8349542763059015795, guid: 248d28fec9b8d4f0cb513047e3d53f99,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 

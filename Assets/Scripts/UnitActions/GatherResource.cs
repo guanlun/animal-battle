@@ -2,8 +2,12 @@
 
 public class GatherResource : UnitAction
 {
+    public bool hasGathered = false;
+    private GameObject resourceObject;
+
     public GatherResource(UnitBehavior unitBehavior) : base(unitBehavior)
     {
+        this.actionName = "GatherResource";
         this.actionRange = 2;
     }
 
@@ -14,14 +18,26 @@ public class GatherResource : UnitAction
 
     public override void SetTarget(GameObject gameObject)
     {
+        if (!hasGathered)
+        {
+            this.resourceObject = gameObject;
+        }
         this.target = gameObject;
         this.unitBehavior.MoveTo(gameObject.transform.position);
     }
 
     public override void Act()
     {
-        this.unitBehavior.animator.SetBool("isWalking", false);
-        this.unitBehavior.animator.SetBool("isGathering", true);
+        if (this.hasGathered)
+        {
+            this.hasGathered = false;
+            this.SetTarget(this.resourceObject);
+        }
+        else
+        {
+            this.unitBehavior.animator.SetBool("isWalking", false);
+            this.unitBehavior.animator.SetBool("isGathering", true);
+        }
     }
 
     public override void HandleAnimationEvent(string animationName)
@@ -29,7 +45,16 @@ public class GatherResource : UnitAction
         if (animationName == "GatherFinish")
         {
             this.unitBehavior.animator.SetBool("isGathering", false);
-            this.unitBehavior.ResetAction();
+            
+            //this.unitBehavior.DropResource();
+            this.hasGathered = true;
+
+            GameObject baseBuilding = GameObject.Find("Base");
+
+            if (baseBuilding)
+            {
+                this.SetTarget(baseBuilding);
+            }
         }
     }
 }

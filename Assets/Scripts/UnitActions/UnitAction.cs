@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class UnitAction
 {
+    public string actionName;
     protected UnitBehavior unitBehavior;
     protected GameObject target;
 

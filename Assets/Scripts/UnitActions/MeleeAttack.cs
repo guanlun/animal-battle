@@ -5,6 +5,7 @@ public class MeleeAttack : UnitAction
 {
     public MeleeAttack(UnitBehavior unitBehavior) : base(unitBehavior)
     {
+        this.actionName = "MeleeAttack";
         this.actionRange = 2;
     }
 

@@ -42,6 +42,7 @@ public class UnitBehavior : MonoBehaviour
             : blueCollarMaterial;
 
         this.actions.Add(new GatherResource(this));
+        this.actions.Add(new DropResource(this));
         this.actions.Add(new MeleeAttack(this));
     }
 
@@ -112,8 +113,6 @@ public class UnitBehavior : MonoBehaviour
     {
         this.navMeshAgent.isStopped = false;
         this.navMeshAgent.SetDestination(destination);
-
-        this.navMeshAgent.isStopped = false;
         this.animator.SetBool("isWalking", true);
     }
 
@@ -129,6 +128,15 @@ public class UnitBehavior : MonoBehaviour
             }
         }
     }
+
+    //public void DropResource()
+    //{
+    //    GameObject baseBuilding = GameObject.Find("Base");
+    //    if (baseBuilding)
+    //    {
+    //        this.SetTarget(baseBuilding);
+    //    }
+    //}
 
     public void SetAttackTarget(GameObject target)
     {
